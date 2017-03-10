@@ -1,0 +1,9 @@
+#elementId{
+    background: white;
+    color: black;
+    font-size: 10px;
+    width: 370px auto;
+    height: 140px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
