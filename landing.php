@@ -20,11 +20,17 @@
 
 	$stmt = $auth_user->runQuery("SELECT * FROM users WHERE id=:user_id");
 
-	$stmt->execute(array(":user_id"=>$user_id));
+	$stmt->execute(array(":user_id"=>$user_id));	
 
-	
+	$Row=$stmt->fetch(PDO::FETCH_ASSOC);
 
-	$userRow=$stmt->fetch(PDO::FETCH_ASSOC);
+    
+
+    $qr = $auth_user->runQuery("SELECT COUNT(*) as 'nbProject' FROM projects WHERE userid=:user_id");
+
+    $qr->execute(array(":user_id"=>$user_id));    
+
+    $infoRow=$qr->fetch(PDO::FETCH_ASSOC);
 
 	
 //print($userRow['email']);
@@ -106,11 +112,29 @@ switch ($type) {
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="fa fa-info-circle"></i>  <strong>Vous aimez le Fablab?</strong> Likez notre page facebook </a> ! <br>
-<div class="fb-like" data-href="https://www.facebook.com/devincifablab/" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>                        
-</div>
+                 
+                 <?php 
+
+                 if($nb_login < 2)
+                 {
+                    echo  "<div class='alert alert-info alert-dismissable'>
+                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                            <i class='fa fa-info-circle'></i>  <strong>Bienvenue sur votre platerforme MyFab $firstname $name!</strong> <br>                    
+                            </div>";
+                 }
+
+                 if($nb_login > 5)
+                 {}
+                 else {
+                          # code...
+                      
+                       echo  "<div class='alert alert-info alert-dismissable'>
+                            <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+                            <i class='fa fa-info-circle'></i>  <strong>Vous aimez le Fablab?</strong> Likez notre page facebook </a> ! <br>
+<div class='fb-like' data-href='https://www.facebook.com/devincifablab/'' data-layout='standard' data-action='like' data-size='large' data-show-faces='true' data-share='true'></div>                        
+</div>";
+
+    } ?>
                     </div>
                 </div>
                 <!-- /.row -->
@@ -126,14 +150,14 @@ switch ($type) {
                                         <i class="fa fa-cogs fa-5x"></i>
                                     </div>
                                     <div class="col-xs-9 text-right">
-                                        <div class="huge"><?php echo $nbpro; ?></div>
+                                        <div class="huge"><?php echo $infoRow['nbProject']; ?></div>
                                         <div>MyFab Projects!</div>
                                     </div>
                                 </div>
                             </div>
                             <a href="#">
                                 <div class="panel-footer">
-                                    <span class="pull-left">Manager mes projets</span>
+                                    <span class="pull-left"><a href="myprojects.php">Manager mes projets</a></span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                     <div class="clearfix"></div>
                                 </div>

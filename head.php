@@ -161,7 +161,8 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
     <![endif]-->
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="js/Chart.min.js"></script>
 
 </head>
 
@@ -210,7 +211,7 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
             <ul class="nav navbar-right top-nav">
 
-                <li class="dropdown">
+               <!-- <li class="dropdown">
 
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
 
@@ -368,7 +369,7 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
                     </ul>
 
-                </li>
+                </li> -->
 
                 <li class="dropdown">
 
@@ -442,6 +443,29 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 
                     </li>
 
+  <li>
+
+                        <a href="javascript:;" data-toggle="collapse" data-target="#tools"><i class="fa fa-fw fa-compass"></i> Outils <i class="fa fa-fw fa-caret-down"></i></a>
+
+                        <ul id="tools" class="collapse">
+
+                            <li>
+
+                                <a href="stlviewer.php">STL Viewer</a>
+
+                            </li>
+
+                            <li>
+
+                                <a href="">New</a>
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+
 		    <?php 
 
 switch ($type) {
@@ -459,7 +483,7 @@ switch ($type) {
 ?>
 
                     <li>
-
+                        <!-- paul - remplacer "template.php" par "stats.php" pour faire débogguage -->
                         <a href="stats.php"><i class="fa fa-fw fa-bar-chart-o"></i> Stats</a>
 
                     </li>

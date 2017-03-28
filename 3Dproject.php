@@ -2,7 +2,10 @@
 
 $googleid = $_GET['id'];
 
-
+if(!isset($googleid))
+{
+	header('Location: ../landing.php');
+}
 	require_once("session.php");
 
 	
@@ -72,6 +75,20 @@ $fabfirstname = $fabuRow['firstname'];
 $fablastname = $fabuRow['lastname'];
 
 $fabemail = $fabuRow['email'];
+	
+
+	$cuser = $auth_user->runQuery("select distinct firstname,lastname,email from users inner join projects where users.id = :uidpro;");
+
+	$cuser->execute(array(":uidpro"=>$uidpro));
+
+	$cabuRow=$cuser->fetch(PDO::FETCH_ASSOC);
+
+
+$ufirstname = $cabuRow['firstname'];
+
+$ulastname = $cabuRow['lastname'];
+
+$uemail = $cabuRow['email'];
 	
 //print($userRow['email']);
 
@@ -237,11 +254,7 @@ switch ($type) {
 
                <div class="row">
                     <div class="col-lg-12">
-                        <div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="fa fa-info-circle"></i>  <strong>Vous aimez le Fablab?</strong> Likez notre page facebook </a> ! <br>
-<div class="fb-like" data-href="https://www.facebook.com/devincifablab/" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>                        
-</div>
+                
                     </div>
                 </div>
                 <!-- /.row -->
@@ -265,9 +278,10 @@ switch ($type) {
       </a>
       <div class="media-body">
         <h4 class="media-heading"><a href="#"><?php echo $title; ?></a></h4>
-        <u>Projet num :</u> <?php echo $idpro; ?><br>
+        <u>Projet num : </u> <?php echo $idpro; ?><br>
+        <u>Projet de :</u><bold><?php echo " "; echo $ufirstname; echo " "; echo $ulastname;?></bold><br>
         <u>Projet soumis le :</u> <?php echo $datecreated; ?><br>
-        <u>Projet fini le :</u> <?php if ($dateover == "0000-00-00") { echo "Projet en cours";}else{echo $dateover;} ?><br>
+        <u>Projet fini le :</u> <?php if ($status < 100) { echo "Projet en cours";}else{echo $dateover;} ?><br>
         <u>Date pr&#233;f&#233;rentielle de d&#233;but :</u> <?php echo $datedebut; ?><br>
         <u>Date pr&#233;f&#233;rentielle de fin :</u> <?php echo $datefinish; ?><br>
 	 <u>Type de projet :</u> <?php echo $typ; ?><br>
@@ -279,7 +293,7 @@ if (!isset($comment) || $comment != null) { echo $comment;} else { echo "Pas de 
 <iframe src="https://drive.google.com/embeddedfolderview?id=<?php echo $googleid;?>#list" style="width:100%; height:130px; border:0;"></iframe>
 
 <bold><?php if ($midpro < 1 ){echo "Votre projet n'a pas encore &#233;t&#233; pris en charge par un de nos membres";}
-else{echo "Votre projet est sous la charge de "; echo $fabfirstname; echo " "; echo $fablastname; echo "."; 
+else{echo "Le projet est sous la charge de "; echo $fabfirstname; echo " "; echo $fablastname; echo "."; 
 echo "<br>Voici son email <a href='mailto:"; echo $fabemail; echo "'>"; echo $fabemail; echo "</a>"; } ?>  </bold>
 <br><br>
 <u>Progression actuelle du projet :</u> <br><br>
@@ -287,14 +301,81 @@ echo "<br>Voici son email <a href='mailto:"; echo $fabemail; echo "'>"; echo $fa
   <div class="progress-bar progress-bar-striped active" role="progressbar"
   aria-valuenow="<?php echo $status;?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $status; ?>%">
     <?php echo $status;?>%
-  </div>
-</div>
+  </div></div>
+  
+    <?php
+if($type > 0 && $type <2)
+{
+	if($status == 100)
+	{
+		echo "<input type='submit' class='btn btn-warning' id='archive' name='archive' value='Archiver le Ticket' disabled/>&nbsp;&nbsp;";
+echo "<input type='submit' class='btn btn-danger' id='commande' name='commande' value='Annuler la Commande' disabled/>";
+	}
+	else
+		 {
+		 	echo "<div class='row'>";
+echo "<div class='col-lg-2'><form action='php_includes/archive.php' method='POST'>";		 	
+echo "<input type='submit' class='btn btn-warning' id='archive' name='archive' value='Archiver le Ticket'/>&nbsp;&nbsp;";
+echo "<input type='hidden' name='id' value='"; echo $googleid; echo "'/>";
+echo "</form></div>";
+echo "<div class='col-lg-2'><form action='php_includes/annule.php' method='POST'>";	
+echo "<input type='submit' class='btn btn-danger' id='commande' name='commande' value='Annuler la Commande' />";
+echo "<input type='hidden' name='id' value='"; echo $googleid; echo "'/>";
+echo "</form></div></div>";
+}
+
+} 
+else if ($type > 1)
+{
+	if($status == 100)
+	{
+        echo "<div class='row'>";
+		echo "<div class='col-lg-2'><input type='submit' class='btn btn-warning' id='archive' name='archive' value='Archiver le Ticket' disabled/>&nbsp;&nbsp;</div>";
+echo "<div class='col-lg-2'><form class='form-inline' action='php_includes/delete.php' method='POST'>";     
+echo "<input type='submit' class='btn btn-danger' id='delete' name='delete' value='Supprimer le Ticket' />";
+echo "<input type='hidden' name='id' value='"; echo $googleid; echo "'/>";
+echo "</form></div></div>";
+	}
+	else
+		 {
+		 	echo "<div class='row'>";	
+echo "<div class='col-lg-2'><form action='php_includes/archive.php' method='POST'>";		
+echo "<input type='submit' class='btn btn-warning' id='archive' name='archive' value='Archiver le Ticket' />&nbsp;&nbsp;";
+echo "<input type='hidden' name='id' value='"; echo $googleid; echo "'/>"; 
+echo "</form></div>";
+echo "<div class='col-lg-2'><form class='form-inline' action='php_includes/delete.php' method='POST'>";		
+echo "<input type='submit' class='btn btn-danger' id='delete' name='delete' value='Supprimer le Ticket' />";
+echo "<input type='hidden' name='id' value='"; echo $googleid; echo "'/>";
+echo "</form></div></div>";
+}
+}
+else
+{
+	if($status > 25 && $status < 100)
+	{
+echo "<div class='row'>";		
+echo "<div class='col-lg-2'><form action='php_includes/annule.php' 'method='POST'>";	
+echo "<input type='submit' class='btn btn-danger' id='commande' name='commande' value='Annuler la Commande' />";
+echo "<input type='hidden' name='id' value='"; echo $googleid; echo "'>";
+echo "</div></div></form>";
+}
+else{
+	echo "<input type='submit' class='btn btn-warning' id='commande' name='Commande' value='Annuler la Commande' disabled/>";
+}
+}
+echo "</form>";
+
+
+
+?>
+
+
 
 
       </div>
     </div>
 
-<div class="container">
+<!--<div class="container">
     <div class="row form-group">
         <div class="col-xs-12 col-md-offset-2 col-md-8 col-lg-8 col-lg-offset-2">
             <div class="panel panel-primary">
@@ -360,7 +441,7 @@ echo "<br>Voici son email <a href='mailto:"; echo $fabemail; echo "'>"; echo $fa
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
                 
             </div>

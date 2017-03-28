@@ -66,17 +66,44 @@ switch ($type) {
                 </div>
                 <!-- /.row -->
 
-               <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="fa fa-info-circle"></i>  <strong>Vous aimez le Fablab?</strong> Likez notre page facebook </a> ! <br>
-<div class="fb-like" data-href="https://www.facebook.com/devincifablab/" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>                        
-</div>
-                    </div>
+<div class="container">
+	<div class="row">
+        <div id="filter-panel" >
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-inline" role="form" name="search" method="get" action="myprojects.php">
+                        <div class="form-group">
+                            <label class="filter-col" style="margin-right:0;" for="pref-search">Chercher:</label>
+                            <input type="text" name="text_search" class="form-control input-sm" id="pref-search" value="<?php echo $text_search = $_GET['text_search'];?>">
+                        </div><!-- form group [search] -->
+                        <div class="form-group">
+                            <label class="filter-col" style="margin-right:0;" for="pref-orderby">&nbsp;Chercher par:</label>
+                            <select id="pref-orderby" name="search_type" class="form-control" value="<?php echo $text_search = $_GET['search_type'];?>">
+				<option value="title">Tout</option>
+                                <option value="datecreated">Date</option>
+				<option value="title">Titre</option>
+				<option value="status">Progression</option>
+                            </select>                                
+                        </div> <!-- form group [order by] --> 
+			<div class="form-group">
+                            <label class="filter-col" style="margin-right:0;" for="pref-orderby">&nbsp;Ordonner par:</label>
+                            <select id="pref-orderby" name="order_by" class="form-control" value="<?php echo $_GET['order_by']; ?>">
+                                <option value="ASC">Croissant</option>
+				<option value="DESC">Decroissant</option>
+                            </select>                                
+                        </div> <!-- form group [order by] --> 
+			&nbsp;
+                        <div class="form-group">    
+                            <button type="submit" id="search" name="search" class="btn btn-default filter-col">
+                                <span class="glyphicon glyphicon-record"></span> Rechercher
+                            </button>  
+                        </div>
+                    </form>
                 </div>
-                <!-- /.row -->
-
+            </div>
+        </div>    
+	</div>
+</div>
 
 <div class="container">
 	<div class="row">
@@ -123,9 +150,20 @@ $nb_login = $userRow['nb_login'];
 
 	$user_id = $_SESSION['user_session'];
 
+$search_type = $_GET['search_type'];
+$text_search = $_GET['text_search'];
+$order_by = $_GET['order_by'];
 
 
-	$myproject = $auth_user->runQuery("SELECT DISTINCT * FROM projects where userid = :id;");
+if(isset($_GET['search']))
+{
+
+	$myproject = $auth_user->runQuery("SELECT DISTINCT * FROM projects where userid = :id AND $search_type LIKE '%$text_search%' ORDER BY $search_type $order_by;");
+}
+else
+{
+	$myproject = $auth_user->runQuery("SELECT DISTINCT * FROM projects where userid = :id ORDER BY datecreated DESC ;");
+}
 
 	$myproject->execute(array(":id"=>$id));	
 

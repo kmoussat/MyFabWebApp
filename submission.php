@@ -231,7 +231,7 @@ unlink($target_file);
 
 // SQL Entry
 
-include('php_includes/db_con.php');
+require_once('php_includes/db_con.php');
 
 
 $title = htmlentities(htmlspecialchars($_POST['title']));
@@ -256,28 +256,12 @@ catch(PDOException $e)
     {
     echo $sql . "<br>" . $e->getMessage();
     }
-
-
-$umail = $_POST['umail'];
-
-try
-{
-$sql = "UPDATE users SET nbpro = '".$row['nbpro']."' + '1'  WHERE users.email = '".$umail."';";
-    // use exec() because no results are returned
-    $conn->exec($sql);
-
-    }
-catch(PDOException $e)
-    {
-    //echo $sql . "<br>" . $e->getMessage();
-$error[] = "Une erreur inattendue est survenure! Veuillez contacter le Fablab &#224; l&#145;adresse suivante : <a href='mailto:devinci.fablab&#64;gmail.com'>devinci.fablab&#64;gmail.com</a>";
-
-
-    }
-
 $conn = null;
 
-sleep(4);
+//$umail = $_POST['umail'];
+
+
+sleep(2);
 
 header('Location: 3Dproject.php?id='.$googleid.'&state=1');
   
@@ -335,34 +319,25 @@ switch ($type) {
                 </div>
                 <!-- /.row -->
 
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="fa fa-info-circle"></i>  <strong>Vous aimez le Fablab?</strong> Likez notre page facebook </a> ! <br>
-<div class="fb-like" data-href="https://www.facebook.com/devincifablab/" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>                        
-</div>
-                    </div>
-                </div>
-                <!-- /.row -->
+         
 
                <div class="container">
 	<div class="row">
     <div class="col-xs-12 well">
         <form method="POST" action="" enctype="multipart/form-data">
-	    <h3>Soumettez votre projet d'impression 3D</h3>	
+	    <h3><font color="orange">Soumettez votre projet d'impression 3D</font></h3>	
             <fieldset class="form-group">
-            <label for="title">*Titre du projet</label>
+            <label for="title">Titre du projet <font color="red">*</font></label>
             <textarea class="form-control" id="title" name="title" rows="1" maxlength="30" value="<?php echo $_POST['title']; ?>" required></textarea>
             <small class="text-muted">Donnez nous un titre &#224; votre projet. (30 caract&#232;res max)</small> 
             </fieldset>        
             <fieldset class="form-group">
-            <label for="scope">*Description du projet</label>
+            <label for="scope">Description du projet <font color="red">*</font></label>
             <textarea class="form-control" id="scope" name="scope" rows="3" value="<?php echo $_POST['scope']; ?>" required></textarea>
             <small class="text-muted">R&#233;digez une description de votre projet.</small> 
             </fieldset>
             <fieldset class="form-group">
-            <label for="type">*Type de projet</label><br>
+            <label for="type">Type de projet <font color="red">*</font></label><br>
             <label class="radio-inline"><input type="radio" name="type" value="Projet&nbsp;Fun" checked>Projet Fun</label>
 	    <label class="radio-inline"><input type="radio" name="type" value="Projet&nbsp;de&nbsp;cours" >Projet de cours</label>
 	    <label class="radio-inline"><input type="radio" name="type" value="Projet&nbsp;d&#145;ann&#233;e">Projet d'ann&#233;e (PIX/PING/PI2)</label>
@@ -370,20 +345,20 @@ switch ($type) {
             <small class="text-muted">S&#233;lectionnez le type de projet correspondant &#224; votre demande.</small>             
             </fieldset>
 	    <fieldset class="form-group">
-            <label for="conf">*Etendu du projet</label><br>
+            <label for="conf">Format du projet <font color="red">*</font></label><br>
             <label class="radio-inline"><input type="radio" name="conf" value="Pi&#232;ce&nbsp;Unique" checked>Pi&#232;ce Unique</label>
 	    <label class="radio-inline"><input type="radio" name="conf" value="Assemblage">Assemblage</label><br>	
             <small class="text-muted">S&#233;lectionnez <i>Assemblage</i> si votre projet comprend plusieurs pi&#232;ces &#224; imprimer et <i>Pi&#232;ce unique</i> si vous n'en avez qu'une seule.</small>             
             </fieldset>
 	    <fieldset class="form-group">
-	    <label for="datedown">*Date de d&#233;but de r&#233;alisation souhait&#233;e</label><br>
+	    <label for="datedown">Date de d&#233;but de r&#233;alisation souhait&#233;e <font color="red">*</font></label><br>
 	    <input type="date" name="datedebut" value="<?php echo date('Y-m-d'); ?>"> 
 	    </fieldset>	
 	    <fieldset class="form-group">
-	    <label for="dateup">*Date de fin de r&#233;alisation du projet souhait&#233;e</label><br>
+	    <label for="dateup">Date de fin de r&#233;alisation du projet souhait&#233;e <font color="red">*</font></label><br>
 	    <input type="date" name="datefinish" value="<?php echo date('Y-m-d'); ?>"> 
 	    </fieldset>	
-            <small class="text-muted">Attention : il faut parfois compter plusieurs jours avant le traitement de la demande et avant sa r&#233;alisation.<p>En fonction du projet, cela peut prendre plus ou moins de temps </p></small>  <br>           
+            <small class="text-muted"><font color="red">Attention : il faut parfois compter plusieurs jours avant le traitement de la demande et avant sa r&#233;alisation.<p>En fonction du projet, cela peut prendre plus ou moins de temps </p></small></font>  <br>           
             <fieldset class="form-group">
             <label for="comments">Commentaires suppl&#233;mentaires</label>
             <textarea class="form-control" name="comments" id="comments" rows="2" maxlength="200" value="<?php echo $_POST['comments']; ?>" ></textarea>
@@ -411,7 +386,7 @@ document.getElementById("message").innerHTML = "<div class='alert alert-warning'
             {
                 var thefile = document.getElementById('fileToUpload').files[0].name;
                 //alert(thefile.value);
-document.getElementById("fname").innerHTML = "<br><div class='alert alert-info'><i class='glyphicon glyphicon-info-sign'></i> &nbsp; " + thefile +"</div>";
+document.getElementById("fname").innerHTML = "<br><div class='alert alert-info'><i class='glyphicon glyphicon-file'></i> &nbsp; " + thefile +"</div>";
 
 
             }
